@@ -1,0 +1,63 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; line-height: 1.5; }
+.container { max-width: 1170px; margin: 0 auto; padding: 0 15px; }
+
+.header { background: #1a1a1a; border-bottom: 2px solid #e50914; padding: 15px 0; }
+.header .container { display: flex; justify-content: space-between; align-items: center; }
+.w3layouts_logo h1 { font-size: 32px; color: #e50914; margin: 0; }
+.w3layouts_logo h1 span { color: #fff; }
+.w3_search { flex: 1; max-width: 400px; margin-left: 30px; position: relative; }
+.w3_search form { display: flex; }
+.w3_search input[type="text"] { flex: 1; padding: 10px; border: none; border-radius: 4px 0 0 4px; background: #2a2a2a; color: #fff; font-size: 14px; }
+.w3_search input[type="submit"] { padding: 10px 20px; border: none; border-radius: 0 4px 4px 0; background: #e50914; color: #fff; cursor: pointer; font-weight: bold; }
+.search-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #1a1a1a; border: 1px solid #2a2a2a; border-top: none; border-radius: 0 0 4px 4px; display: none; z-index: 1000; }
+.search-suggestions a { display: block; padding: 10px 15px; color: #ccc; text-decoration: none; font-size: 14px; }
+.search-suggestions a:hover { background: #e50914; color: #fff; }
+
+.movies_nav { background: #0a0a0a; border-bottom: 1px solid #2a2a2a; }
+.navbar { margin: 0; border: none; background: transparent; }
+.navbar-nav { display: flex; list-style: none; padding: 0; }
+.navbar-nav li { position: relative; }
+.navbar-nav li a { display: block; padding: 15px 20px; color: #fff; text-decoration: none; font-size: 14px; transition: background 0.3s; }
+.navbar-nav li a:hover { background: #e50914; }
+.navbar-nav li a i { margin-right: 5px; }
+.dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #1a1a1a; border: 1px solid #2a2a2a; z-index: 1000; min-width: 200px; }
+.dropdown:hover .dropdown-menu { display: block; }
+.dropdown-menu li { padding: 0; }
+.dropdown-menu li a { padding: 10px 15px; }
+
+.movie-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+@media (max-width: 1024px) { .movie-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 768px) { .movie-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 480px) { .movie-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.movie-card { background: #1a1a1a; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.3s; }
+.movie-card:hover { transform: translateY(-3px); }
+.movie-card img { width: 100%; height: 200px; object-fit: cover; }
+.movie-info { padding: 10px; }
+.movie-title { font-size: 13px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+.movie-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.movie-quality { color: #e50914; font-weight: bold; }
+.movie-episode { color: #666; }
+.movie-year { color: #666; }
+.movie-genre { color: #e50914; }
+
+.category-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+.category-item { padding: 8px 16px; background: #1a1a1a; border-radius: 4px; color: #fff; text-decoration: none; transition: background 0.3s; font-size: 14px; }
+.category-item:hover { background: #e50914; }
+
+.section { margin-bottom: 40px; }
+.section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+.section-title span { color: #e50914; margin-right: 10px; }
+
+.social-links { position: fixed; left: 10px; top: 5px; z-index: 1200; display: flex; flex-direction: column; gap: 10px; }
+.social-links a { display: block; width: 30px; height: 30px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; font-size: 14px; }
+
+footer { background: #1a1a1a; padding: 40px 0; border-top: 2px solid #e50914; margin-top: 50px; }
+.footer-content { display: flex; justify-content: space-between; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: #666; text-decoration: none; font-size: 14px; }
+.footer-links a:hover { color: #e50914; }
+.footer-copyright { color: #666; font-size: 14px; }
+
+.clearfix { clear: both; }

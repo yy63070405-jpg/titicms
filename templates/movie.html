@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= movie.title %><%= movie.year ? ' (' + movie.year + ')' : '' %> - Watch <%= movie.genre || '' %> Movie Online Free - <%= site.siteName %></title>
+  <meta name="description" content="<%= movie.description || movie.title + (movie.year ? ' (' + movie.year + ')' : '') + ' full movie online. Watch ' + (movie.genre || '') + ' movie streaming free.' %>">
+  <meta name="keywords" content="<%= movie.title %>, <%= movie.genre || '' %>, watch online, free movie, <%= site.siteKeywords || 'free movies' %>">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="<%= site.siteName || 'Free Movies' %>">
+  <link rel="canonical" href="<%= site.siteURL || 'http://localhost:3000' %>/movie-<%= movie.id %>.html">
+  <meta property="og:type" content="video.movie">
+  <meta property="og:title" content="<%= movie.title %><%= movie.year ? ' (' + movie.year + ')' : '' %> - <%= site.siteName %>">
+  <meta property="og:description" content="<%= movie.description || 'Watch ' + movie.title + ' online free.' %>">
+  <meta property="og:url" content="<%= site.siteURL || 'http://localhost:3000' %>/movie-<%= movie.id %>.html">
+  <% if (movie.poster || movie.cover) { %>
+  <meta property="og:image" content="<%= movie.poster || movie.cover %>">
+  <meta name="twitter:image" content="<%= movie.poster || movie.cover %>">
+  <% } %>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= movie.title %><%= movie.year ? ' (' + movie.year + ')' : '' %> - <%= site.siteName %>">
+  <meta name="twitter:description" content="<%= movie.description || 'Watch ' + movie.title + ' online free.' %>">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Movie",
+      "name": "<%= movie.title || '' %>",
+      "alternateName": "<%= movie.titleEn || '' %>",
+      "description": "<%= movie.description || '' %>",
+      "image": "<%= movie.poster || movie.cover || '' %>",
+      "dateCreated": "<%= movie.year ? movie.year + '-01-01' : '' %>",
+      "director": <%= movie.director ? JSON.stringify([{ "@type": "Person", "name": movie.director }]) : '[]' %>,
+      "actor": <%= movie.cast ? JSON.stringify(movie.cast.split(/[,，]/).filter(c => c.trim()).map(name => ({ "@type": "Person", "name": name.trim() }))) : '[]' %>,
+      "genre": <%= movie.genre ? JSON.stringify(movie.genre.split(/[,，]/).map(g => g.trim())) : '[]' %>,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": <%= movie.rating || 0 %>,
+        "bestRating": 10
+      },
+      "contentRating": "PG-13",
+      "duration": "<%= movie.duration ? 'PT' + movie.duration.replace(/分钟|min/, 'M') : '' %>"
+    }
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/movie.css">
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="vt" placeholder="Search: Title / Genres / Year" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li><a href="/"><i>🏠</i> Home</a></li>
+        <li><a href="/list.html"><i>📋</i> List A-Z</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle"><i>🎬</i> Genres</a>
+          <ul class="dropdown-menu">
+            <% categories.forEach(cat => { %>
+              <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li><a href="/list.html?vt=year"><i>📅</i> Year</a></li>
+        <li><a href="/list.html?vt=top"><i>🔥</i> Trending</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="movie-header">
+      <div class="movie-poster">
+        <img src="<%= movie.poster || 'https://via.placeholder.com/280x400' %>" alt="<%= movie.title %>">
+      </div>
+      <div class="movie-details">
+        <h1 class="movie-title"><%= movie.title %></h1>
+        <div class="movie-title-en"><%= movie.titleEn || '' %></div>
+        <div class="movie-info-grid">
+          <div class="info-item"><div class="info-label">Genre</div><div class="info-value"><%= movie.genre %></div></div>
+          <div class="info-item"><div class="info-label">Year</div><div class="info-value"><%= movie.year %></div></div>
+          <div class="info-item"><div class="info-label">Duration</div><div class="info-value"><%= movie.duration || '--' %></div></div>
+          <div class="info-item"><div class="info-label">Rating</div><div class="info-value">⭐ <%= movie.rating || 0 %></div></div>
+          <div class="info-item"><div class="info-label">Director</div><div class="info-value"><%= movie.director || '--' %></div></div>
+          <div class="info-item"><div class="info-label">Cast</div><div class="info-value"><%= movie.cast || '--' %></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="movie-description">
+      <strong>Synopsis:</strong><br><br>
+      <%= movie.description || 'No synopsis available.' %>
+    </div>
+
+    <div class="player-section">
+      <div class="player-container">
+        <% if (movie.videoURL) { %>
+          <video id="video-player" width="100%" height="100%" controls>
+            <source src="<%= movie.videoURL %>" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        <% } else { %>
+          <div class="player-placeholder">
+            <h3>🎬 Video Player</h3>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (movie.type === 'series' && movie.episodes && movie.episodes.length > 0) { %>
+      <div class="episode-list">
+        <h3>📺 Episode List</h3>
+        <div class="episode-grid">
+          <% movie.episodes.forEach(ep => { %>
+            <div class="episode-item" onclick="playEpisode('<%= ep.videoURL || movie.videoURL || '' %>')">
+              <%= ep.title || 'Episode ' + ep.number %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="comments-section">
+      <h3>💬 Comments (<span id="comment-count">0</span>)</h3>
+      <div class="comment-form">
+        <input type="text" class="comment-input" id="comment-name" placeholder="Your Name">
+        <textarea class="comment-input" id="comment-content" rows="3" placeholder="Write your comment..."></textarea>
+        <button class="comment-submit" onclick="submitComment()">Post Comment</button>
+      </div>
+      <div id="comment-list">
+        <div style="text-align: center; color: #666; padding: 30px;">Loading comments...</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Online TV</a>
+          <a href="/movies.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="/sitemap.xml">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function playEpisode(url) {
+      const player = document.getElementById('video-player');
+      if (player && url) {
+        player.src = url;
+        player.play();
+      }
+    }
+
+    async function loadComments() {
+      const response = await fetch('/api/movies/<%= movie.id %>/comments');
+      const data = await response.json();
+      const comments = data.data || [];
+      const commentList = document.getElementById('comment-list');
+      const commentCount = document.getElementById('comment-count');
+      
+      commentCount.textContent = comments.length;
+      
+      if (comments.length === 0) {
+        commentList.innerHTML = '<div style="text-align: center; color: #666; padding: 30px;">No comments yet. Be the first to comment!</div>';
+        return;
+      }
+      
+      commentList.innerHTML = comments.map(comment => `
+        <div class="comment-item">
+          <div class="comment-author">${comment.name || 'Anonymous'}</div>
+          <div class="comment-content">${comment.content}</div>
+          <div class="comment-time">${new Date(comment.createdAt).toLocaleString()}</div>
+        </div>
+      `).join('');
+    }
+
+    async function submitComment() {
+      const name = document.getElementById('comment-name').value;
+      const content = document.getElementById('comment-content').value;
+      if (!content.trim()) {
+        alert('Please enter comment content');
+        return;
+      }
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ movieId: <%= movie.id %>, name, content })
+      });
+      const data = await response.json();
+      if (data.success) {
+        document.getElementById('comment-content').value = '';
+        document.getElementById('comment-name').value = '';
+        await loadComments();
+      } else {
+        alert('Failed to post comment: ' + (data.error || 'Unknown error'));
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadComments);
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %> Movies - Watch <%= pageTitle %> Movies Online - <%= site.siteName %></title>
+  <meta name="description" content="Browse our <%= pageTitle.toLowerCase() %> movies collection. Watch free movies online.">
+  <meta name="keywords" content="<%= pageTitle.toLowerCase() %> movies, <%= pageTitle.toLowerCase() %> movies online, free movies">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="<%= site.siteName || 'Free Movies' %>">
+  <link rel="canonical" href="<%= site.siteURL || 'http://localhost:3000' %>/list.html?vt=<%= viewType || 'default' %>">
+  <meta property="og:type" content="collection">
+  <meta property="og:title" content="<%= pageTitle %> Movies - <%= site.siteName %>">
+  <meta property="og:description" content="Browse our <%= pageTitle.toLowerCase() %> movies collection.">
+  <meta property="og:url" content="<%= site.siteURL || 'http://localhost:3000' %>/list.html?vt=<%= viewType || 'default' %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= pageTitle %> Movies - <%= site.siteName %>">
+  <meta name="twitter:description" content="Browse our <%= pageTitle.toLowerCase() %> movies collection.">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/list.css">
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="q" placeholder="搜索: 片名/主演/导演" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li><a href="/"><i>🏠</i> Home</a></li>
+        <li><a href="/list.html" class="<%= viewType === 'default' ? 'active' : '' %>"><i>📋</i> List A-Z</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle"><i>🎬</i> Genres</a>
+          <ul class="dropdown-menu">
+            <% categories.forEach(cat => { %>
+              <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li><a href="/list.html?vt=year" class="<%= viewType === 'year' ? 'active' : '' %>"><i>📅</i> Year</a></li>
+        <li><a href="/list.html?vt=top" class="<%= viewType === 'top' ? 'active' : '' %>"><i>🔥</i> Trending</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title"><%= pageTitle %></h1>
+      <select class="sort-select" onchange="changeSort(this.value)">
+        <option value="az" <%= sortBy === 'az' ? 'selected' : '' %>>A-Z</option>
+        <option value="za" <%= sortBy === 'za' ? 'selected' : '' %>>Z-A</option>
+        <option value="newest" <%= sortBy === 'newest' ? 'selected' : '' %>>最新</option>
+        <option value="top" <%= sortBy === 'top' ? 'selected' : '' %>>热门</option>
+      </select>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab <%= viewType === 'default' ? 'active' : '' %>" onclick="changeView('default')">📋 A-Z</button>
+      <button class="filter-tab <%= viewType === 'year' ? 'active' : '' %>" onclick="changeView('year')">📅 Year</button>
+      <button class="filter-tab <%= viewType === 'top' ? 'active' : '' %>" onclick="changeView('top')">🔥 Trending</button>
+    </div>
+
+    <% if (viewType === 'default') { %>
+      <div class="alphabet-bar">
+        <a href="/list.html?vt=default&letter=all&sort=<%= sortBy %>" class="alpha-link all <%= letter === 'all' ? 'active' : '' %>">ALL</a>
+        <% ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'].forEach(letter => { %>
+          <a href="/list.html?vt=default&letter=<%= letter %>&sort=<%= sortBy %>" class="alpha-link <%= letter === currentLetter ? 'active' : '' %>"><%= letter %></a>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <% if (viewType === 'year') { %>
+      <div class="year-grid">
+        <% years.forEach(year => { %>
+          <div class="year-item" onclick="location.href='/list.html?vt=year&year=<%= year.year %>&sort=<%= sortBy %>'">
+            <span><%= year.year %></span>
+            <div class="count"><%= year.count %>部</div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <% if (viewType === 'year' && selectedYear) { %>
+      <div style="margin-bottom: 20px; color: #e50914; font-size: 16px;">
+        📅 年份: <%= selectedYear %> (<%= movies.length %>部电影)
+        <a href="/list.html?vt=year&sort=<%= sortBy %>" style="margin-left: 20px; color: #666; text-decoration: underline;">查看全部年份</a>
+      </div>
+    <% } %>
+
+    <div class="movie-grid">
+      <% movies.forEach(movie => { %>
+        <div class="movie-card" onclick="location.href='/movie-<%= movie.id %>.html'">
+          <img src="<%= movie.poster || 'https://via.placeholder.com/200x300' %>" alt="<%= movie.title %>">
+          <div class="movie-info">
+            <div class="movie-title"><%= movie.title %></div>
+            <div class="movie-meta">
+              <span class="movie-year"><%= movie.year %></span>
+              <span class="movie-genre"><%= movie.genre %></span>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <% if (movies.length === 0) { %>
+      <div style="text-align: center; padding: 60px 0; color: #666;">
+        <h3>😔 没有找到相关电影</h3>
+        <p>请尝试其他筛选条件</p>
+      </div>
+    <% } %>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="/">Online TV</a>
+          <a href="/list.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function changeView(viewType) {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('vt', viewType);
+      currentUrl.searchParams.delete('letter');
+      currentUrl.searchParams.delete('year');
+      window.location.href = currentUrl.toString();
+    }
+
+    function changeSort(sortBy) {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('sort', sortBy);
+      window.location.href = currentUrl.toString();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= site.siteName %> | Watch Free HD Movies Online</title>
+  <meta name="description" content="<%= site.siteDesc || 'Watch the latest movies and TV shows online for free. Full HD movies streaming.' %>">
+  <meta name="keywords" content="<%= site.siteKeywords || 'free movies, watch movies online, full movies, HD movies' %>">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="<%= site.siteName || 'Free Movies' %>">
+  <link rel="canonical" href="<%= site.siteURL || 'http://localhost:3000' %>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= site.siteName %> | Watch Free HD Movies Online">
+  <meta property="og:description" content="<%= site.siteDesc || 'Watch the latest movies and TV shows online for free.' %>">
+  <meta property="og:url" content="<%= site.siteURL || 'http://localhost:3000' %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= site.siteName %> | Watch Free HD Movies Online">
+  <meta name="twitter:description" content="<%= site.siteDesc || 'Watch the latest movies and TV shows online for free.' %>">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "<%= site.siteName || 'Free Movies' %>",
+      "description": "<%= site.siteDesc || 'Watch free movies online' %>",
+      "url": "<%= site.siteURL || 'http://localhost:3000' %>",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "<%= site.siteURL || 'http://localhost:3000' %>/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="q" placeholder="搜索: 片名/主演/导演" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="<%= page === 'home' ? 'w3_home_act' : '' %>">
+              <a href="/"><i>🏠</i> Home</a>
+            </li>
+            <li>
+              <a href="/list.html"><i>📋</i> List A-Z</a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i>🎬</i> Genres</a>
+              <ul class="dropdown-menu">
+                <% categories.forEach(cat => { %>
+                  <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+                <% }); %>
+              </ul>
+            </li>
+            <li>
+              <a href="/list.html?vt=year"><i>📅</i> Year</a>
+            </li>
+            <li>
+              <a href="/list.html?vt=top"><i>🔥</i> Trending</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="slider">
+      <div class="slider-container">
+        <div class="slider-main">
+          <% if (featuredMovies && featuredMovies.length > 0) { %>
+            <div class="slider-item" onclick="location.href='/movie-<%= featuredMovies[0].id %>.html'">
+              <img src="<%= featuredMovies[0].cover || featuredMovies[0].poster || 'https://via.placeholder.com/600x400' %>" alt="<%= featuredMovies[0].title %>">
+              <div class="slider-overlay">
+                <div class="slider-title"><%= featuredMovies[0].title %></div>
+                <div class="slider-desc"><%= featuredMovies[0].description || featuredMovies[0].title %></div>
+                <a href="/movie-<%= featuredMovies[0].id %>.html" class="slider-btn">Watch Now</a>
+              </div>
+            </div>
+          <% } %>
+        </div>
+        <div class="slider-sidebar">
+          <% if (featuredMovies && featuredMovies.length > 1) { %>
+            <% featuredMovies.slice(1, 4).forEach(movie => { %>
+              <div class="sidebar-item" onclick="location.href='/movie-<%= movie.id %>.html'">
+                <img src="<%= movie.poster || 'https://via.placeholder.com/200x150' %>" alt="<%= movie.title %>">
+                <div class="sidebar-overlay">
+                  <div class="sidebar-title"><%= movie.title %></div>
+                </div>
+              </div>
+            <% }); %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="trending-section">
+      <div class="container">
+        <h3 class="trending-title"><i>🔥</i> Trending Searches</h3>
+        <div class="trending-tags">
+          <% trendingKeywords.forEach(keyword => { %>
+            <a href="/search.html?q=<%= encodeURIComponent(keyword.keyword) %>" class="trending-tag">
+              <i>📈</i> <%= keyword.keyword %>
+              <span><%= keyword.count ? keyword.count.toLocaleString() : '' %></span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-list">
+      <% categories.forEach(cat => { %>
+        <a href="/category-<%= cat.slug %>.html" class="category-item">
+          <%= cat.icon %> <%= cat.alias || cat.name %>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title"><span>🔥</span> Trending</h2>
+      <div class="movie-grid">
+        <% recentMovies.slice(0, 12).forEach(movie => { %>
+          <div class="movie-card" onclick="location.href='/movie-<%= movie.id %>.html'">
+            <img src="<%= movie.poster || 'https://via.placeholder.com/200x300' %>" alt="<%= movie.title %>">
+            <div class="movie-info">
+              <div class="movie-title"><%= movie.title %></div>
+              <div class="movie-meta">
+                <span class="movie-quality">HD</span>
+                <span class="movie-episode"><%= movie.type === 'series' ? ((movie.episodes || []).length + ' Ep') : 'Movie' %></span>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title"><span>🎬</span> Latest Movies</h2>
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('new')">New</button>
+        <button class="tab" onclick="showTab('popular')">Popular</button>
+        <button class="tab" onclick="showTab('netflix')">Netflix</button>
+        <button class="tab" onclick="showTab('more')">More</button>
+      </div>
+      <div class="movie-grid">
+        <% movies.slice(0, 18).forEach(movie => { %>
+          <div class="movie-card" onclick="location.href='/movie-<%= movie.id %>.html'">
+            <img src="<%= movie.poster || 'https://via.placeholder.com/200x300' %>" alt="<%= movie.title %>">
+            <div class="movie-info">
+              <div class="movie-title"><%= movie.title %></div>
+              <div class="movie-meta">
+                <span class="movie-quality">HD</span>
+                <span class="movie-episode"><%= movie.type === 'series' ? ((movie.episodes || []).length + ' Ep') : 'Movie' %></span>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+
+    </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Online TV</a>
+          <a href="/list.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="/sitemap.xml">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

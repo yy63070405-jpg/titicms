@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>页面未找到 - <%= site.siteName %></title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #0a0a0a; color: #fff; line-height: 1.5; }
+    .container { max-width: 1170px; margin: 0 auto; padding: 0 15px; }
+
+    .header { background: #1a1a1a; border-bottom: 2px solid #e50914; padding: 15px 0; }
+    .header .container { display: flex; justify-content: space-between; align-items: center; }
+    .w3layouts_logo h1 { font-size: 32px; color: #e50914; margin: 0; }
+    .w3layouts_logo h1 span { color: #fff; }
+    .w3_search { flex: 1; max-width: 400px; margin-left: 30px; }
+    .w3_search form { display: flex; }
+    .w3_search input[type="text"] { flex: 1; padding: 10px; border: none; border-radius: 4px 0 0 4px; background: #2a2a2a; color: #fff; font-size: 14px; }
+    .w3_search input[type="submit"] { padding: 10px 20px; border: none; border-radius: 0 4px 4px 0; background: #e50914; color: #fff; cursor: pointer; font-weight: bold; }
+
+    .movies_nav { background: #0a0a0a; border-bottom: 1px solid #2a2a2a; }
+    .navbar-nav { display: flex; list-style: none; padding: 0; }
+    .navbar-nav li { position: relative; }
+    .navbar-nav li a { display: block; padding: 15px 20px; color: #fff; text-decoration: none; font-size: 14px; transition: background 0.3s; }
+    .navbar-nav li a:hover { background: #e50914; }
+    .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #1a1a1a; border: 1px solid #2a2a2a; z-index: 1000; min-width: 200px; }
+    .dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-menu li a { padding: 10px 15px; }
+
+    .error-container { text-align: center; padding: 80px 0; }
+    .error-code { font-size: 120px; color: #e50914; margin-bottom: 20px; font-weight: bold; }
+    .error-message { font-size: 24px; margin-bottom: 30px; color: #fff; }
+    .error-desc { font-size: 16px; color: #666; margin-bottom: 40px; }
+    .back-home { padding: 12px 30px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-size: 18px; transition: background 0.3s; }
+    .back-home:hover { background: #ff0a16; }
+
+    .social-links { position: fixed; left: 10px; top: 5px; z-index: 1200; display: flex; flex-direction: column; gap: 10px; }
+    .social-links a { display: block; width: 30px; height: 30px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; font-size: 14px; }
+
+    footer { background: #1a1a1a; padding: 40px 0; border-top: 2px solid #e50914; margin-top: 50px; }
+    .footer-content { display: flex; justify-content: space-between; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: #666; text-decoration: none; font-size: 14px; }
+    .footer-links a:hover { color: #e50914; }
+    .footer-copyright { color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="q" placeholder="搜索: 片名/主演/导演" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li><a href="/"><i>🏠</i> Home</a></li>
+        <li><a href="/list.html"><i>📋</i> List A-Z</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle"><i>🎬</i> Genres</a>
+          <ul class="dropdown-menu">
+            <% categories.forEach(cat => { %>
+              <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li><a href="/list.html?vt=year"><i>📅</i> Year</a></li>
+        <li><a href="/list.html?vt=top"><i>🔥</i> Trending</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="error-container">
+      <div class="error-code">404</div>
+      <div class="error-message">页面未找到</div>
+      <div class="error-desc">抱歉，您访问的页面不存在或已被移除</div>
+      <a href="/" class="back-home">返回首页</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="/">Online TV</a>
+          <a href="/list.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

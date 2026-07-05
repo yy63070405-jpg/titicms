@@ -1,0 +1,20 @@
+.page-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0; }
+.page-title { font-size: 28px; color: #e50914; }
+.sort-select { padding: 8px 16px; background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 4px; color: #fff; font-size: 14px; }
+
+.filter-tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+.filter-tab { padding: 8px 16px; background: #1a1a1a; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background 0.3s; }
+.filter-tab:hover { background: #3a3a3a; }
+.filter-tab.active { background: #e50914; }
+
+.alphabet-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.alpha-link { padding: 6px 14px; background: #1a1a1a; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: bold; transition: background 0.3s; }
+.alpha-link:hover { background: #e50914; }
+.alpha-link.active { background: #e50914; }
+.alpha-link.all { background: #3a3a3a; }
+
+.year-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-bottom: 30px; }
+.year-item { padding: 15px; background: #1a1a1a; border-radius: 4px; text-align: center; cursor: pointer; transition: background 0.3s; }
+.year-item:hover { background: #e50914; }
+.year-item span { display: block; font-size: 18px; font-weight: bold; }
+.year-item .count { font-size: 12px; color: #666; margin-top: 5px; }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= category.alias || category.name %> Movies - Watch <%= category.alias || category.name %> Movies Online Free - <%= site.siteName %></title>
+  <meta name="description" content="Watch <%= category.alias || category.name %> movies online free. Latest <%= category.alias || category.name %> full movies streaming.">
+  <meta name="keywords" content="<%= category.alias || category.name %>, <%= category.alias || category.name %> movies, watch <%= category.alias || category.name %> online, free <%= category.alias || category.name %> movies">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="<%= site.siteName || 'Free Movies' %>">
+  <link rel="canonical" href="<%= site.siteURL || 'http://localhost:3000' %>/category-<%= category.id %>.html">
+  <meta property="og:type" content="collection">
+  <meta property="og:title" content="<%= category.alias || category.name %> Movies - <%= site.siteName %>">
+  <meta property="og:description" content="Watch <%= category.alias || category.name %> movies online free.">
+  <meta property="og:url" content="<%= site.siteURL || 'http://localhost:3000' %>/category-<%= category.id %>.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= category.alias || category.name %> Movies - <%= site.siteName %>">
+  <meta name="twitter:description" content="Watch <%= category.alias || category.name %> movies online free.">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/category.css">
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="q" placeholder="搜索: 片名/主演/导演" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li><a href="/"><i>🏠</i> Home</a></li>
+        <li><a href="/list.html"><i>📋</i> List A-Z</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle"><i>🎬</i> Genres</a>
+          <ul class="dropdown-menu">
+            <% categories.forEach(cat => { %>
+              <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li><a href="/list.html?vt=year"><i>📅</i> Year</a></li>
+        <li><a href="/list.html?vt=top"><i>🔥</i> Trending</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="page-title"><%= category.icon %> <%= category.alias || category.name %> Movies</h1>
+
+    <div class="category-list">
+      <% categories.forEach(cat => { %>
+        <a href="/category-<%= cat.slug %>.html" class="category-item">
+          <%= cat.icon %> <%= cat.alias || cat.name %>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="movie-grid">
+      <% movies.forEach(movie => { %>
+        <div class="movie-card" onclick="location.href='/movie-<%= movie.id %>.html'">
+          <img src="<%= movie.poster || 'https://via.placeholder.com/200x300' %>" alt="<%= movie.title %>">
+          <div class="movie-info">
+            <div class="movie-title"><%= movie.title %></div>
+            <div class="movie-meta">
+              <span class="movie-year"><%= movie.year %></span>
+              <span class="movie-genre"><%= movie.genre %></span>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <% if (movies.length === 0) { %>
+      <div style="text-align: center; padding: 50px; color: #666;">No movies found in this category.</div>
+    <% } %>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#">Online TV</a>
+          <a href="/list.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="/sitemap.xml">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

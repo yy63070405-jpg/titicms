@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results for "<%= query || '' %>" - <%= site.siteName %></title>
+  <meta name="description" content="Search results for &quot;<%= query || '' %>&quot;. Watch movies online free.">
+  <meta name="keywords" content="<%= query || '' %>, search movies, watch <%= query || '' %> online, free movies">
+  <meta name="robots" content="noindex, follow">
+  <meta name="author" content="<%= site.siteName || 'Free Movies' %>">
+  <link rel="canonical" href="<%= site.siteURL || 'http://localhost:3000' %>/search.html?q=<%= encodeURIComponent(query || '') %>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Search Results for &quot;<%= query || '' %>&quot; - <%= site.siteName %>">
+  <meta property="og:description" content="Search results for &quot;<%= query || '' %>&quot;.">
+  <meta property="og:url" content="<%= site.siteURL || 'http://localhost:3000' %>/search.html?q=<%= encodeURIComponent(query || '') %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Search Results for &quot;<%= query || '' %>&quot; - <%= site.siteName %>">
+  <meta name="twitter:description" content="Search results for &quot;<%= query || '' %>&quot;.">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/search.css">
+</head>
+<body>
+  <div class="social-links">
+    <a href="#" title="Telegram">📱</a>
+    <a href="#" title="TikTok">🎵</a>
+    <a href="#" title="TV">📺</a>
+  </div>
+
+  <div class="header">
+    <div class="container">
+      <div class="w3layouts_logo">
+        <h1><span>🎬</span> <%= site.siteName %></h1>
+      </div>
+      <div class="w3_search">
+        <form action="search.html" method="get">
+          <input type="text" name="q" placeholder="搜索: 片名/主演/导演" value="<%= query || '' %>" required>
+          <input type="submit" value="Go">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="movies_nav">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li><a href="/"><i>🏠</i> Home</a></li>
+        <li><a href="/list.html"><i>📋</i> List A-Z</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle"><i>🎬</i> Genres</a>
+          <ul class="dropdown-menu">
+            <% categories.forEach(cat => { %>
+              <li><a href="/category-<%= cat.slug %>.html"><font color="#e50914"><%= cat.icon %> <%= cat.alias || cat.name %></font></a></li>
+            <% }); %>
+          </ul>
+        </li>
+        <li><a href="/list.html?vt=year"><i>📅</i> Year</a></li>
+        <li><a href="/list.html?vt=top"><i>🔥</i> Trending</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="search-filters">
+      <h3>🔍 筛选条件</h3>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>类型:</label>
+          <select name="genre" id="filter-genre">
+            <option value="">全部类型</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat.name %>" <%= genre === cat.name ? 'selected' : '' %>><%= cat.icon %> <%= cat.alias || cat.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>年份:</label>
+          <select name="year" id="filter-year">
+            <option value="">全部年份</option>
+            <% years.forEach(y => { %>
+              <option value="<%= y %>" <%= year == y ? 'selected' : '' %>><%= y %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>主演:</label>
+          <input type="text" name="cast" id="filter-cast" placeholder="输入主演姓名" value="<%= cast || '' %>">
+        </div>
+        <div class="filter-group">
+          <label>导演:</label>
+          <input type="text" name="director" id="filter-director" placeholder="输入导演姓名" value="<%= director || '' %>">
+        </div>
+        <button class="filter-btn" onclick="applyFilters()">筛选</button>
+        <button class="clear-btn" onclick="clearFilters()">重置</button>
+      </div>
+    </div>
+
+    <div class="search-results">
+      <div class="results-header">
+        <h2>搜索结果: <%= query ? '"' + query + '"' : '全部电影' %></h2>
+        <div class="results-count">共 <span><%= total %></span> 部电影</div>
+      </div>
+
+      <% if (movies.length > 0) { %>
+        <div class="movie-grid">
+          <% movies.forEach(movie => { %>
+            <div class="movie-card" onclick="location.href='/movie-<%= movie.id %>.html'">
+              <img src="<%= movie.poster || 'https://via.placeholder.com/200x300' %>" alt="<%= movie.title %>">
+              <div class="movie-info">
+                <div class="movie-title"><%= movie.title %></div>
+                <div class="movie-meta">
+                  <span class="movie-year"><%= movie.year %></span>
+                  <span class="movie-genre"><%= movie.genre %></span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
+        <% if (totalPages > 1) { %>
+          <div class="pagination">
+            <a href="<%= getPageUrl(1) %>" class="page-link <%= page === 1 ? 'disabled' : '' %>">首页</a>
+            <a href="<%= getPageUrl(page - 1) %>" class="page-link <%= page === 1 ? 'disabled' : '' %>">上一页</a>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <a href="<%= getPageUrl(i) %>" class="page-link <%= page === i ? 'active' : '' %>"><%= i %></a>
+            <% } %>
+            <a href="<%= getPageUrl(page + 1) %>" class="page-link <%= page >= totalPages ? 'disabled' : '' %>">下一页</a>
+            <a href="<%= getPageUrl(totalPages) %>" class="page-link <%= page >= totalPages ? 'disabled' : '' %>">末页</a>
+          </div>
+        <% } %>
+      <% } else { %>
+        <div class="no-results">
+          <h3>😔 没有找到相关电影</h3>
+          <p>请尝试调整搜索条件或使用其他关键词</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="/">Online TV</a>
+          <a href="/movies.html">Movies</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Sitemap</a>
+        </div>
+        <div class="footer-copyright">&copy; <%= currentYear %> <%= site.siteName %>. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function applyFilters() {
+      const query = document.querySelector('input[name="q"]').value;
+      const genre = document.getElementById('filter-genre').value;
+      const year = document.getElementById('filter-year').value;
+      const cast = document.getElementById('filter-cast').value;
+      const director = document.getElementById('filter-director').value;
+      
+      let url = 'search.html';
+      let params = [];
+      if (query) params.push('q=' + encodeURIComponent(query));
+      if (genre) params.push('genre=' + encodeURIComponent(genre));
+      if (year) params.push('year=' + year);
+      if (cast) params.push('cast=' + encodeURIComponent(cast));
+      if (director) params.push('director=' + encodeURIComponent(director));
+      
+      if (params.length > 0) url += '?' + params.join('&');
+      window.location.href = url;
+    }
+
+    function clearFilters() {
+      const query = document.querySelector('input[name="q"]').value;
+      let url = 'search.html';
+      if (query) url += '?q=' + encodeURIComponent(query);
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>
