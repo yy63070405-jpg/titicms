@@ -348,15 +348,18 @@ app.get('/', async (req, res) => {
     
     const publishedMovies = movies.filter(m => m.status === 'published');
     const featuredMovies = publishedMovies.filter(m => m.featured).slice(0, 10);
-    const latestMovies = [...publishedMovies].sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 20);
+    const recentMovies = [...publishedMovies].sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 12);
+    const trendingKeywords = geoService.getTrendingKeywords(10);
     
     const template = await fs.readFile(path.join(config.paths.templates, 'index.html'), 'utf-8');
     const html = ejs.render(template, {
       site: settings,
       movies: publishedMovies,
       featuredMovies,
-      latestMovies,
+      recentMovies,
+      trendingKeywords,
       categories,
+      page: 'home',
       currentYear: new Date().getFullYear()
     });
     
