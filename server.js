@@ -282,11 +282,91 @@ app.get('/search.html', async (req, res) => {
   }
 });
 
-app.use('/', express.static(config.paths.dist));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, config.paths.dist, 'index.html'));
+app.get('/movie/:id.html', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const movie = await storage.getMovie(id);
+    if (!movie) {
+      const template = await fs.readFile(path.join(config.paths.templates, '404.html'), 'utf-8');
+      return res.status(404).send(template);
+    }
+    
+    const settings = await storage.getSettings();
+    const categories = await storage.getCategories();
+    const relatedMovies = await storage.getMovies();
+    
+    const template = await fs.readFile(path.join(config.paths.templates, 'movie.html'), 'utf-8');
+    const html = ejs.render(template, {
+      site: settings,
+      movie,
+      categories,
+      relatedMovies: relatedMovies.filter(m => m.id !== id && m.genre === movie.genre).slice(0, 8)
+    });
+    
+    res.send(html);
+  } catch (error) {
+    res.status(500).send('电影加载失败: ' + error.message);
+  }
 });
+
+app.get('/category/:id.html', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const categories = await storage.getCategories();
+    const category = categories.find(c => c.id === id || c.alias === id);
+    
+    if (!category) {
+      const template = await fs.readFile(path.join(config.paths.templates, '404.html'), 'utf-8');
+      return res.status(404).send(template);
+    }
+    
+    const settings = await storage.getSettings();
+    const movies = await storage.getMovies();
+    
+    const filteredMovies = movies.filter(m => m.status === 'published' && m.genre === category.id);
+    
+    const template = await fs.readFile(path.join(config.paths.templates, 'category.html'), 'utf-8');
+    const html = ejs.render(template, {
+      site: settings,
+      category,
+      categories,
+      movies: filteredMovies,
+      currentYear: new Date().getFullYear()
+    });
+    
+    res.send(html);
+  } catch (error) {
+    res.status(500).send('分类加载失败: ' + error.message);
+  }
+});
+
+app.get('/', async (req, res) => {
+  try {
+    const movies = await storage.getMovies();
+    const settings = await storage.getSettings();
+    const categories = await storage.getCategories();
+    
+    const publishedMovies = movies.filter(m => m.status === 'published');
+    const featuredMovies = publishedMovies.filter(m => m.featured).slice(0, 10);
+    const latestMovies = [...publishedMovies].sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 20);
+    
+    const template = await fs.readFile(path.join(config.paths.templates, 'index.html'), 'utf-8');
+    const html = ejs.render(template, {
+      site: settings,
+      movies: publishedMovies,
+      featuredMovies,
+      latestMovies,
+      categories,
+      currentYear: new Date().getFullYear()
+    });
+    
+    res.send(html);
+  } catch (error) {
+    res.status(500).send('首页加载失败: ' + error.message);
+  }
+});
+
+app.use('/', express.static(config.paths.dist));
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
